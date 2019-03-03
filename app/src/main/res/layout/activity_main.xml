@@ -171,11 +171,13 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/scendday"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/rainy_small" />
 
             <TextView
+                android:id="@+id/time2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -192,11 +194,13 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/thirdday"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/partly_sunny_small" />
 
             <TextView
+                android:id="@+id/time3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -213,11 +217,13 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/forthday"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/windy_small" />
 
             <TextView
+                android:id="@+id/time4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -234,11 +240,13 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/fifthday"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/sunny_small" />
 
             <TextView
+                android:id="@+id/time5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

@@ -10,14 +10,21 @@
     tools:context="mg.studio.weatherappdesign.MainActivity">
 
     <TextView
+        android:id="@+id/isnetwork"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:text="tip:" />
+
+    <TextView
+        android:id="@+id/titleweekShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Sunday"
         android:textAllCaps="true"
-        android:textColor="#10000000"
+        android:textColor="#000000"
         android:textSize="36sp"
         android:textStyle="bold" />
 

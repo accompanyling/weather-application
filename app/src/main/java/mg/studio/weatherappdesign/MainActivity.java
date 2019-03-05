@@ -1,7 +1,10 @@
 package mg.studio.weatherappdesign;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -37,18 +40,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //get the system time
+        //initial refresh the page
+        new DownloadUpdate().execute();
+        setCityName("ChongQin");
+            //get the system time
         SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy/MM/dd   HH:mm:ss");
+        SimpleDateFormat   formatter1=new SimpleDateFormat("EEEE");
         Date curDate=new Date(System.currentTimeMillis());
         String str=formatter.format(curDate);
+        String weekshow=formatter1.format(curDate);
         Log.d("curdate time:",str);
         TextView text_curtime=(TextView)this.findViewById(R.id.tv_date);
+        TextView text_titleweekShow=(TextView)this.findViewById(R.id.titleweekShow);
         text_curtime.setText(str);
+        text_titleweekShow.setText(weekshow);
 
-        //set the initial temperature
-//        String  temperature=String.valueOf(15);
-//        ((TextView) findViewById(R.id.temperature_of_the_day)).setText(temperature);
+
+    }
+   //get the net work_status;
+    private boolean isNetworkConnected() {
+
+        ConnectivityManager manager1 = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager1.getActiveNetworkInfo();
+        return (info != null && info.isAvailable());
     }
 
     public String getWeatherMain(JSONArray jsonArray,int positon){
@@ -68,12 +82,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void forcastTheWeather(String str,int i){
+        ImageView  firstview=(ImageView)this.findViewById(R.id.img_weather_condition);
         ImageView secondview=(ImageView)this.findViewById(R.id.scendday);
         ImageView thirdview=(ImageView)this.findViewById(R.id.thirdday);
         ImageView forthview=(ImageView)this.findViewById(R.id.forthday);
         ImageView fifthview=(ImageView)this.findViewById(R.id.fifthday);
+        if(i==0){
+            switch (str){
+                case"Rain":
+                    firstview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.rainy_small));
+                    break;
+                case"Clear":
+                    firstview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.sunny_small));
+                    break;
+                case"Clouds":
+                    firstview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.windy_small));
+                    break;
+                default:
+            }
+        }
         if(i==2){
             switch (str){
+                case"Rain":
+                    secondview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.rainy_small));
+                    break;
                 case"Clear":
                     secondview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.sunny_small));
                     break;
@@ -86,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if(i==4){
             switch (str){
+                case"Rain":
+                    thirdview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.rainy_small));
+                    break;
                 case"Clear":
                     thirdview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.sunny_small));
                     break;
@@ -98,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if(i==6){
             switch (str){
+                case"Rain":
+                    forthview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.rainy_small));
+                    break;
                 case"Clear":
                     forthview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.sunny_small));
                     break;
@@ -110,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if(i==8){
             switch (str){
+                case"Rain":
+                    fifthview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.rainy_small));
+                    break;
                 case"Clear":
                     fifthview.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.sunny_small));
                     break;
@@ -168,11 +209,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnClick(View view) {
-        new DownloadUpdate().execute();
+        //is net work
         //update system time
         //SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("dd/MM/yyyy");
-
-        SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy/MM/dd   HH:mm:ss EEEE");
+        if(!isNetworkConnected()){
+            TextView isnetwork=(TextView)this.findViewById(R.id.isnetwork);
+            isnetwork.setText("There is not network!!!");
+        }
+        SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy/MM/dd   HH:mm:ss");
         Date curDate=new Date(System.currentTimeMillis());
         String str=formatter.format(curDate);
         Log.d("curdate time:",str);
@@ -180,15 +224,11 @@ public class MainActivity extends AppCompatActivity {
         text_curtime.setText(str);
 
         //change icon
-        ImageView curpicture=(ImageView)this.findViewById(R.id.img_weather_condition);
-
- //       String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"D:/GitWareHouse/Android-Appliaction_copy/weather-application/app/src/main/res/drawable/sunny_small.png";
+        //String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"D:/GitWareHouse/Android-Appliaction_copy/weather-application/app/src/main/res/drawable/sunny_small.png";
 //        Bitmap bitmap=BitmapFactory.decodeFile(path);
 //        curpicture.setImageBitmap(bitmap);
 //        Uri uri=Uri.fromFile(new File(path));
 //        curpicture.setImageURI(uri);
-        curpicture.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.sunny_small));
-        setCityName("Tawarano");
 
         //set next four days
         SimpleDateFormat format=new SimpleDateFormat("EEEE");
@@ -198,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("curstr",curstr);
         Log.d("curstr inter",String.valueOf(numberInWeek));
         setSpecificTime(numberInWeek);
+
+
     }
     public int getNumberInWeek(String str){
         int number=0;
@@ -292,11 +334,11 @@ public class MainActivity extends AppCompatActivity {
 
     private class DownloadUpdate extends AsyncTask<String, Void, String> {
 
-
+        public JSONArray wholearray;
         @Override
         protected String doInBackground(String... strings) {
 //          String stringUrl = "http://mpianatra.com/Courses/info.txt";
-            String stringUrl="https://mpianatra.com/Courses/forecast.json";
+            String stringUrl="http://api.openweathermap.org/data/2.5/forecast?q=Chongqing,cn&mode=json&APPID=aa3d744dc145ef9d350be4a80b16ecab";
             HttpURLConnection urlConnection = null;
             BufferedReader reader;
 
@@ -339,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //change list to JSONArray in order to get a value in the Array
                     JSONArray arraylist=new JSONArray(list);
-
+                    wholearray=arraylist;
                     //get the value in the Array and the index is 0
                     JSONObject currentday=arraylist.getJSONObject(0);
                     String main=currentday.optString("main").toString();
@@ -352,22 +394,6 @@ public class MainActivity extends AppCompatActivity {
                     data=data-273.15;
                     int appear=data.intValue();
                     result=String.valueOf(appear);
-                    String crntday=getWeatherMain(arraylist,0);
-                    String secondday=getWeatherMain(arraylist,2);
-                    String thirdday=getWeatherMain(arraylist,4);
-                    String forthday=getWeatherMain(arraylist,6);
-                    String fifthday=getWeatherMain(arraylist,8);
-                    Log.d("currntday",crntday);
-                    Log.d("secondday:",secondday);
-                    Log.d("thirdday",thirdday);
-                    Log.d("forthday",forthday);
-                    Log.d("fifthday",fifthday);
-
-                    forcastTheWeather(secondday,2);
-                    forcastTheWeather(thirdday,4);
-                    forcastTheWeather(forthday,6);
-                    forcastTheWeather(fifthday,8);
-
                     //get the location
                     //setCityName(cityName);
                     return  result;
@@ -393,6 +419,25 @@ public class MainActivity extends AppCompatActivity {
             //Update the temperature displayed
             //JSONObject root=new JSONObject(temperature.toString());
             ((TextView) findViewById(R.id.temperature_of_the_day)).setText(temperature);
+
+            //forcast the folloing four days
+            JSONArray arraylist=wholearray;
+            String crntday=getWeatherMain(arraylist,0);
+            String secondday=getWeatherMain(arraylist,8);
+            String thirdday=getWeatherMain(arraylist,16);
+            String forthday=getWeatherMain(arraylist,24);
+            String fifthday=getWeatherMain(arraylist,32);
+            Log.d("currntday",crntday);
+            Log.d("secondday:",secondday);
+            Log.d("thirdday",thirdday);
+            Log.d("forthday",forthday);
+            Log.d("fifthday",fifthday);
+            forcastTheWeather(crntday,0);
+            forcastTheWeather(secondday,2);
+            forcastTheWeather(thirdday,4);
+            forcastTheWeather(forthday,6);
+            forcastTheWeather(fifthday,8);
         }
+
     }
 }
